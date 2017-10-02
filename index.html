@@ -109,32 +109,43 @@
   </style>
 </head>
 <body>
-<pre id="editor">digraph G {
+<pre id="editor">digraph architecture {
+  rankdir=LR;
 
-  subgraph cluster_0 {
-    style=filled;
-    color=lightgrey;
-    node [style=filled,color=white];
-    a0 -> a1 -> a2 -> a3;
-    label = "process #1";
+  // Storage - #303F9F (dark blue)
+  node[fillcolor="#303F9F" style="filled" fontcolor="white"];
+  database[label="MongoDB"];
+
+  // Client-side Apps - #FFEB3B (yellow)
+  node[fillcolor="#FFEB3B" style="filled" fontcolor="black"];
+  front_end[label="Front-end Parksmapp_V1.0"];
+
+  // Microservices - #C8E6C9 (light green)
+  node[fillcolor="#C8E6C9" style="filled" fontcolor="black"];
+  parksmap_bk[label="parksmap backend_V1.0"];
+
+  // Microservices staging - #FF7043 (light green)
+  node[fillcolor="#FF7043" style="filled" fontcolor="black"];
+  balparks_bk[label="balparks backend_V2.0"];
+
+  // 3rd-party APIs - #CFD8DC (light grey)
+  node[fillcolor="#CFD8DC" style="filled" fontcolor="black"];
+  mymaps_api[label="Mymaps API"];
+
+  subgraph client_side_apps {
+
+     front_end -> {mymaps_api};
+     front_end -> {parksmap_bk};
+     front_end -> {balparks_bk};
+
+     {rank=same front_end,mymaps_api};
+
   }
 
-  subgraph cluster_1 {
-    node [style=filled];
-    b0 -> b1 -> b2 -> b3;
-    label = "process #2";
-    color=blue
+  subgraph microservices {
+      parksmap_bk -> {database};
+      balparks_bk -> {database};
   }
-  start -> a0;
-  start -> b0;
-  a1 -> b3;
-  b2 -> a3;
-  a3 -> a0;
-  a3 -> end;
-  b3 -> end;
-
-  start [shape=Mdiamond];
-  end [shape=Msquare];
 }</pre>
 <div id="options">
   <label id="engine">
